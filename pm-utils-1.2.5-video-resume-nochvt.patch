@@ -1,0 +1,10 @@
+--- pm-utils-1.2.5/pm/sleep.d/99video	2009-04-03 20:48:21.000000000 +0200
++++ pm-utils-1.2.5/pm/sleep.d/99video.new	2010-07-13 09:20:27.350722628 +0200
+@@ -92,6 +92,7 @@
+ 
+ maybe_deallocvt()
+ {
++    [ "$QUIRK_NO_CHVT" = "true" ] && return
+     state_exists console || return
+     chvt $(restorestate console)
+     deallocvt 63

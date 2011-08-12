@@ -1,0 +1,26 @@
+NM checks the identify of the caller, which requires the caller
+to still be on the bus for a bit after sending the message.  Without
+--print-reply, dbus-send exits too early and NM cannot obtain the
+caller's UID and other authentication information. (rh #610299)
+
+diff -up pm-utils-1.2.5/pm/sleep.d/55NetworkManager.nm-wakeup pm-utils-1.2.5/pm/sleep.d/55NetworkManager
+--- pm-utils-1.2.5/pm/sleep.d/55NetworkManager.nm-wakeup	2009-03-23 19:00:46.000000000 -0700
++++ pm-utils-1.2.5/pm/sleep.d/55NetworkManager	2010-07-14 09:09:14.485402542 -0700
+@@ -11,7 +11,7 @@
+ suspend_nm()
+ {
+ 	# Tell NetworkManager to shut down networking
+-	dbus_send --system                         \
++	dbus_send --system --print-reply               \
+ 		--dest=org.freedesktop.NetworkManager  \
+ 		/org/freedesktop/NetworkManager        \
+ 		org.freedesktop.NetworkManager.sleep
+@@ -20,7 +20,7 @@ suspend_nm()
+ resume_nm()
+ {
+ 	# Wake up NetworkManager and make it do a new connection
+-	dbus_send --system                        \
++	dbus_send --system --print-reply              \
+ 		--dest=org.freedesktop.NetworkManager \
+ 		/org/freedesktop/NetworkManager       \
+ 		org.freedesktop.NetworkManager.wake
